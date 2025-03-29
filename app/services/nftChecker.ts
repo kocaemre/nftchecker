@@ -18,7 +18,7 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 async function retryOperation<T>(
   operation: () => Promise<T>, 
   retries = 3, 
-  delayMs = 1000,
+  delayMs = 500,
   operationName = "operation"
 ): Promise<T> {
   try {
@@ -61,7 +61,7 @@ export async function checkWallets(
           const balance = await retryOperation(
             async () => await contract.balanceOf(address),
             2, // Max 2 retries
-            500, // 1.5 seconds between retries
+            300, // 300ms between retries (was 500ms)
             `Balance check for ${address}`
           );
           
@@ -79,8 +79,8 @@ export async function checkWallets(
         });
       }
       
-      // Add delay between API calls (1000ms)
-      await delay(1000);
+      // Add delay between API calls (reduced from 1000ms to 300ms)
+      await delay(300);
     }
     
     return results;

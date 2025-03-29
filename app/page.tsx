@@ -185,7 +185,7 @@ export default function Home() {
               </div>
               <p className="text-xs text-gray-500 mt-2">{progressPercentage}%</p>
               <p className="text-xs text-gray-500 mt-4">
-                Please wait - adding delay between requests to avoid API rate limits
+                Processing requests with minimal delay to optimize speed
               </p>
               {connectionAttempts > 2 && (
                 <p className="mt-3 text-sm text-amber-600">
