@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NFT Wallet Checker
+
+NFT Wallet Checker is a web application that allows you to check if Ethereum wallet addresses hold specific NFTs from a collection. Simply enter wallet addresses and get instant results.
+
+## Features
+
+- Check multiple wallet addresses at once
+- See which wallets hold NFTs from a specific collection
+- Copy wallet addresses with one click (all, holders, or non-holders)
+- Password-protected access
+- Modern and responsive UI
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 16.x or later
+- npm or yarn
+
+### Installation
+
+1. Clone the repository
+```bash
+git clone https://github.com/yourusername/nft-wallet-checker.git
+cd nft-wallet-checker
+```
+
+2. Install dependencies
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Configure the application
+   - Open `app/config/contract.ts`
+   - Replace `NFT_CONTRACT_ADDRESS` with your NFT contract address
+   - Set up an Ethereum API provider URL (from Alchemy, Infura, etc.)
+
+```typescript
+// Example configuration
+export const NFT_CONTRACT_ADDRESS = '0xYourNFTContractAddress';
+export const ETHEREUM_PROVIDER_URL = 'https://eth-mainnet.g.alchemy.com/v2/your-api-key';
+```
+
+4. Run the development server
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Login**: Enter the password to access the application
+2. **Check Wallets**: Enter Ethereum wallet addresses (one per line or comma-separated)
+3. **View Results**: See which wallets hold NFTs from the collection
+4. **Copy Addresses**: Use the copy buttons to copy addresses based on NFT ownership
 
-## Learn More
+## Deployment
 
-To learn more about Next.js, take a look at the following resources:
+You can deploy this application to Vercel:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run build
+# or
+vercel
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Security
 
-## Deploy on Vercel
+This application uses a simple password protection mechanism with cookies. For production use, consider implementing more robust authentication.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Default password: `respectemre`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+To change the password, edit the `LoginScreen.tsx` file.
+
+## License
+
+MIT
+
+## Acknowledgements
+
+- Built with [Next.js](https://nextjs.org/)
+- UI components from [shadcn/ui](https://ui.shadcn.com/)
+- Ethereum interaction with [ethers.js](https://docs.ethers.org/)
