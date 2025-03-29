@@ -6,7 +6,7 @@ import ResultsTable from './components/ResultsTable';
 import LoginScreen from './components/LoginScreen';
 import { checkWallets, WalletCheckResult } from './services/nftChecker';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, Info, Wallet, LogOut } from "lucide-react";
+import { AlertCircle, Info, Wallet, LogOut, RefreshCw } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 import { NFT_CONTRACT_ADDRESS } from './config/contract';
 import { Button } from '@/components/ui/button';
@@ -19,6 +19,8 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [progress, setProgress] = useState({ current: 0, total: 0 });
+  const [connectionAttempts, setConnectionAttempts] = useState(0);
 
   useEffect(() => {
     // Check if user is authenticated via cookie
@@ -42,13 +44,55 @@ export default function Home() {
   const handleWalletCheck = async (walletAddresses: string[]) => {
     setIsLoading(true);
     setError(null);
+    setConnectionAttempts(0);
+    setProgress({ current: 0, total: walletAddresses.length });
     
     try {
-      const checkResults = await checkWallets(walletAddresses, NFT_CONTRACT_ADDRESS);
-      setResults(checkResults);
+      // Create a tracked version of the results that updates as we go
+      const partialResults: WalletCheckResult[] = [];
+      setResults(partialResults);
+
+      // Process each wallet with a delay between calls
+      for (let i = 0; i < walletAddresses.length; i++) {
+        try {
+          const address = walletAddresses[i];
+          
+          // Update progress indicator
+          setProgress({ current: i, total: walletAddresses.length });
+          
+          // Individual wallet check
+          try {
+            setConnectionAttempts(prev => prev + 1);
+            const checkResult = await checkWallets([address], NFT_CONTRACT_ADDRESS);
+            
+            // Add to results
+            partialResults.push(checkResult[0]);
+            setResults([...partialResults]);
+          } catch (walletErr) {
+            console.error(`Error checking wallet ${address}:`, walletErr);
+            
+            // Add error result
+            partialResults.push({
+              address,
+              hasNFT: false,
+              error: walletErr instanceof Error 
+                ? walletErr.message 
+                : 'Unknown error checking wallet'
+            });
+            setResults([...partialResults]);
+          }
+        } catch (err) {
+          console.error(`Error in wallet check loop:`, err);
+        }
+      }
+      
+      // Final progress update
+      setProgress({ current: walletAddresses.length, total: walletAddresses.length });
     } catch (err) {
       console.error('Error checking wallets:', err);
-      setError('Failed to check wallets. Please try again.');
+      setError(err instanceof Error 
+        ? `Failed to check wallets: ${err.message}` 
+        : 'Failed to check wallets. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -68,6 +112,11 @@ export default function Home() {
     return <LoginScreen onLogin={handleLogin} />;
   }
 
+  // Calculate progress percentage
+  const progressPercentage = progress.total === 0 
+    ? 0 
+    : Math.round((progress.current / progress.total) * 100);
+  
   // Show main application if authenticated
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-4 md:p-8">
@@ -107,15 +156,43 @@ export default function Home() {
           {error && (
             <Alert variant="destructive" className="border-2 border-red-200 shadow-sm">
               <AlertCircle className="h-5 w-5" />
-              <AlertTitle>Error Occurred</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
+              <AlertTitle>Connection Error</AlertTitle>
+              <AlertDescription className="space-y-2">
+                <p>{error}</p>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => window.location.reload()}
+                  className="flex items-center gap-1 mt-2"
+                >
+                  <RefreshCw className="h-3.5 w-3.5" /> Reload and Try Again
+                </Button>
+              </AlertDescription>
             </Alert>
           )}
           
           {isLoading && (
             <div className="w-full flex flex-col items-center justify-center py-12 bg-white rounded-xl shadow-sm border-2 border-gray-100">
               <div className="h-12 w-12 animate-spin rounded-full border-4 border-indigo-600 border-r-transparent"></div>
-              <p className="mt-6 text-base text-gray-600">Checking wallets...</p>
+              <p className="mt-6 text-base text-gray-600">
+                Checking wallets... ({progress.current} of {progress.total})
+              </p>
+              <div className="w-64 bg-gray-200 rounded-full h-2.5 mt-4">
+                <div 
+                  className="bg-indigo-600 h-2.5 rounded-full transition-all duration-300 ease-in-out"
+                  style={{ width: `${progressPercentage}%` }}
+                ></div>
+              </div>
+              <p className="text-xs text-gray-500 mt-2">{progressPercentage}%</p>
+              <p className="text-xs text-gray-500 mt-4">
+                Please wait - adding delay between requests to avoid API rate limits
+              </p>
+              {connectionAttempts > 2 && (
+                <p className="mt-3 text-sm text-amber-600">
+                  <RefreshCw className="h-3.5 w-3.5 inline-block mr-1 animate-spin" /> 
+                  Connecting to blockchain... (This may take longer than usual)
+                </p>
+              )}
             </div>
           )}
           

@@ -1,6 +1,9 @@
 // NFT Contract configuration
 
-// NFT Contract address on Ethereum mainnet (replace with your actual NFT contract address)
+/**
+ * NFT Contract address on Ethereum mainnet
+ * IMPORTANT: Replace this with your actual NFT contract address
+ */
 export const NFT_CONTRACT_ADDRESS = '0xd887090Fc6f9af10abE6cF287AC8011a3Cb55a65'; 
 
 // Only including the balanceOf function from the full ABI
