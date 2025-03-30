@@ -6,7 +6,7 @@
  */
 export const NFT_CONTRACT_ADDRESS = '0xd887090Fc6f9af10abE6cF287AC8011a3Cb55a65'; 
 
-// Only including the balanceOf function from the full ABI
+// ABI for checking NFT balance
 export const NFT_CONTRACT_ABI = [
   {
     "inputs": [{"internalType": "address", "name": "owner", "type": "address"}],

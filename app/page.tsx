@@ -6,7 +6,7 @@ import ResultsTable from './components/ResultsTable';
 import LoginScreen from './components/LoginScreen';
 import { checkWallets, WalletCheckResult } from './services/nftChecker';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, Info, Wallet, LogOut, RefreshCw, BarChart2 } from "lucide-react";
+import { AlertCircle, Info, Wallet, LogOut, RefreshCw, BarChart2, Settings } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 import { NFT_CONTRACT_ADDRESS } from './config/contract';
 import { Button } from '@/components/ui/button';
@@ -22,6 +22,7 @@ export default function Home() {
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [progress, setProgress] = useState({ current: 0, total: 0 });
   const [connectionAttempts, setConnectionAttempts] = useState(0);
+  const [useOpenSea, setUseOpenSea] = useState(true);
 
   useEffect(() => {
     // Check if user is authenticated via cookie
@@ -40,6 +41,11 @@ export default function Home() {
     Cookies.remove('auth_token');
     setIsAuthenticated(false);
     toast.info('Logged out successfully');
+  };
+
+  const toggleOpenSea = () => {
+    setUseOpenSea(!useOpenSea);
+    toast.info(`${!useOpenSea ? 'Enabled' : 'Disabled'} OpenSea API for token IDs`);
   };
 
   const handleWalletCheck = async (walletAddresses: string[]) => {
@@ -64,7 +70,7 @@ export default function Home() {
           // Individual wallet check
           try {
             setConnectionAttempts(prev => prev + 1);
-            const checkResult = await checkWallets([address], NFT_CONTRACT_ADDRESS);
+            const checkResult = await checkWallets([address], NFT_CONTRACT_ADDRESS, useOpenSea);
             
             // Add to results
             partialResults.push(checkResult[0]);
@@ -125,6 +131,15 @@ export default function Home() {
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">NFT Checker</h1>
           <div className="flex gap-4">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="flex items-center gap-2"
+              onClick={toggleOpenSea}
+            >
+              <Settings className="h-4 w-4" />
+              {useOpenSea ? 'Using OpenSea API' : 'Using Blockchain Only'}
+            </Button>
             <Link href="/statistics">
               <Button variant="outline" className="flex items-center gap-2">
                 <BarChart2 className="h-4 w-4" />
@@ -196,7 +211,7 @@ export default function Home() {
                 </div>
                 <p className="text-xs text-gray-500 mt-2">{progressPercentage}%</p>
                 <p className="text-xs text-gray-500 mt-4">
-                  Processing requests with minimal delay to optimize speed
+                  {useOpenSea ? 'Using OpenSea API to get token IDs' : 'Using blockchain queries only'}
                 </p>
                 {connectionAttempts > 2 && (
                   <p className="mt-3 text-sm text-amber-600">
