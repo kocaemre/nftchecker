@@ -298,7 +298,7 @@ export default function StatisticsPage() {
     },
     { 
       title: "Floor Price", 
-      value: stats?.floorPrice ? `Ξ${stats.floorPrice.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })}` : "N/A", 
+      value: stats?.floorPrice ? `Ξ${stats.floorPrice.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 4 })}` : "N/A", 
       icon: <TrendingUp className="h-4 w-4" />, 
       color: "#FFBB28",
       description: "Lowest listed price for an NFT in the collection"
