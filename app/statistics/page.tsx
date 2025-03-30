@@ -291,21 +291,21 @@ export default function StatisticsPage() {
     },
     { 
       title: "Average Price", 
-      value: stats?.averagePrice ? `Ξ${stats.averagePrice.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 4 })}` : "N/A", 
+      value: stats?.averagePrice ? `Ξ${stats.averagePrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}` : "N/A", 
       icon: <TrendingUp className="h-4 w-4" />, 
       color: "#8884d8",
       description: "Average sale price of NFTs in the last 30 days"
     },
     { 
       title: "Floor Price", 
-      value: stats?.floorPrice ? `Ξ${stats.floorPrice.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 4 })}` : "N/A", 
+      value: stats?.floorPrice ? `Ξ${stats.floorPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}` : "N/A", 
       icon: <TrendingUp className="h-4 w-4" />, 
       color: "#FFBB28",
       description: "Lowest listed price for an NFT in the collection"
     },
     { 
       title: "Best Offer", 
-      value: stats?.bestOffer ? `Ξ${stats.bestOffer.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 4 })}` : "N/A", 
+      value: stats?.bestOffer ? `Ξ${stats.bestOffer.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}` : "N/A", 
       icon: <TrendingUp className="h-4 w-4" />, 
       color: "#FF8042",
       description: "Highest offer price for an NFT in the collection"
