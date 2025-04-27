@@ -19,4 +19,4 @@ export const NFT_CONTRACT_ABI = [
 
 // Ethereum provider URL (using public endpoint for demo)
 // For production, use your own API key from Alchemy, Infura, etc.
-export const ETHEREUM_PROVIDER_URL = 'https://eth-mainnet.g.alchemy.com/v2/gAFGX2_a0b4vJ7g40AztBASIAYLR89hs'; 
+export const ETHEREUM_PROVIDER_URL = 'https://eth-mainnet.g.alchemy.com/v2/xxxxxx'; 
