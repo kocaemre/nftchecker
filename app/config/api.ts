@@ -9,7 +9,7 @@ export const OPENSEA_API_URL = 'https://api.opensea.io/api/v2';
  * OpenSea API Key (Using the working API key from statistics page)
  * Visit: https://docs.opensea.io/reference/api-keys to get your own API key
  */
-export const OPENSEA_API_KEY = 'a073f12180134273854325e95517f7ed';
+export const OPENSEA_API_KEY = 'xxxxx';
 
 /**
  * NFT Contract Address
